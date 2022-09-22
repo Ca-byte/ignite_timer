@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Play } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,24 +12,62 @@ import {
   StartCoundownBtn,
   TaskInput,
 } from './styles'
+import { useState } from 'react'
+
+
+// interface NewCicleFormData {
+//   task: string
+//   minutesAmount: number
+// }
 
 const newCycleFormValidationScrema = zod.object({
   task: zod.string().min(1, 'Please, you forgot the task name'),
   minutesAmount: zod
-    .number()
-    .min(5, 'Oh boy! Cannot be less than 5 minutes')
-    .max(60, 'Oh boy! Cannot be more than 60 minutes'),
+  .number()
+  .min(5, 'Oh boy! Cannot be less than 5 minutes')
+  .max(60, 'Oh boy! Cannot be more than 60 minutes'),
 })
 
-export function Home() {
-  const { register, handleSubmit, watch } = useForm({
-    resolver: zodResolver(newCycleFormValidationScrema),
-  })
+type NewCicleFormData = zod.infer<typeof  newCycleFormValidationScrema>
 
-  function handleCreateNewCycle(data: any) {
-    console.log(data)
+interface CycleProps {
+  id: string,
+  task: string,
+  minutesAmout: number
+
+}
+
+export function Home() {
+  const [ cycles, setCycles]= useState<CycleProps[]>([])
+  const [ activeCycleId, setActiveCycleId]= useState<string | null>(null)
+  
+
+
+
+  const { register, handleSubmit, watch, reset } = useForm<NewCicleFormData>({
+    resolver: zodResolver(newCycleFormValidationScrema),
+    defaultValues: {
+      task: '',
+      minutesAmount: 0,
+    },
+  })
+ 
+  const id = String(new Date().getTime())
+
+  function handleCreateNewCycle(data: NewCicleFormData) {
+    const newCycle: CycleProps = {
+      id,
+      task: data.task,
+      minutesAmout: data.minutesAmount
+    }
+    setCycles((state) => [...state, newCycle])
+    setActiveCycleId(id)
+    reset()
   }
 
+  const activeCycle = cycles.find(cycle => cycle.id === activeCycleId)
+  console.log(activeCycle)
+  
   const task = watch('task')
   const isSubmitDisabled = !task
 
