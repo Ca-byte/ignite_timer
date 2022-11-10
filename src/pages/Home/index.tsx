@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+import { useEffect, useState } from 'react'
 import { HandPalm, Play } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,8 +14,6 @@ import {
   StopCountdownBtn,
   TaskInput,
 } from './styles'
-import { useEffect, useState } from 'react'
-
 
 // interface NewCicleFormData {
 //   task: string
@@ -25,12 +23,12 @@ import { useEffect, useState } from 'react'
 const newCycleFormValidationScrema = zod.object({
   task: zod.string().min(1, 'Please, you forgot the task name'),
   minutesAmount: zod
-  .number()
-  .min(5, 'Oh boy! Cannot be less than 5 minutes')
-  .max(60, 'Oh boy! Cannot be more than 60 minutes'),
+    .number()
+    .min(5, 'Oh boy! Cannot be less than 5 minutes')
+    .max(60, 'Oh boy! Cannot be more than 60 minutes'),
 })
 
-type NewCicleFormData = zod.infer<typeof  newCycleFormValidationScrema>
+type NewCicleFormData = zod.infer<typeof newCycleFormValidationScrema>
 
 interface CycleProps {
   id: string
@@ -38,14 +36,13 @@ interface CycleProps {
   minutesAmout: number
   startDate: Date
   interruptedDate?: Date
-
 }
 
 export function Home() {
-  const [ cycles, setCycles]= useState<CycleProps[]>([])
-  const [ activeCycleId, setActiveCycleId]= useState<string | null>(null)
-  const [ amountSecondsPassed, setAmountSecondsPassed]= useState(0)
-  
+  const [cycles, setCycles] = useState<CycleProps[]>([])
+  const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
+
   const { register, handleSubmit, watch, reset } = useForm<NewCicleFormData>({
     resolver: zodResolver(newCycleFormValidationScrema),
     defaultValues: {
@@ -53,7 +50,7 @@ export function Home() {
       minutesAmount: 0,
     },
   })
- 
+
   const id = String(new Date().getTime())
 
   function handleCreateNewCycle(data: NewCicleFormData) {
@@ -70,32 +67,32 @@ export function Home() {
     reset()
   }
 
-  function handleStopCycle(){
-    setCycles(cycles.map(cycle => {
-      if(cycle.id === activeCycleId) {
-        return {...cycle, interruptedDate: new Date() }
-        
-      } else {
-        return cycle
-      }
-    }))
+  function handleStopCycle() {
+    setCycles(
+      cycles.map((cycle) => {
+        if (cycle.id === activeCycleId) {
+          return { ...cycle, interruptedDate: new Date() }
+        } else {
+          return cycle
+        }
+      }),
+    )
     setActiveCycleId(null)
   }
 
-  console.log(cycles)
-
-  const activeCycle = cycles.find(cycle => cycle.id === activeCycleId)
-    useEffect(()=> {
-      if(activeCycle){
-        const interval = setInterval(()=>{
-          setAmountSecondsPassed(
-            differenceInSeconds(new Date(), activeCycle.startDate))
-        },1000)
-        return () => {
-          clearInterval(interval)
-        }
+  const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
+  useEffect(() => {
+    if (activeCycle) {
+      const interval = setInterval(() => {
+        setAmountSecondsPassed(
+          differenceInSeconds(new Date(), activeCycle.startDate),
+        )
+      }, 1000)
+      return () => {
+        clearInterval(interval)
       }
-    },[activeCycle])
+    }
+  }, [activeCycle])
 
   const totalSeconds = activeCycle ? activeCycle.minutesAmout * 60 : 0
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0
@@ -106,15 +103,14 @@ export function Home() {
   const minutes = String(minutesAmout).padStart(2, '0')
   const seconds = String(secondsAmout).padStart(2, '0')
 
-useEffect(()=> {
-  if(activeCycle){
-    document.title = `${minutes}: ${seconds}`
-  }
-}, [minutes, seconds, activeCycle])
+  useEffect(() => {
+    if (activeCycle) {
+      document.title = `${minutes}: ${seconds}`
+    }
+  }, [minutes, seconds, activeCycle])
 
   const task = watch('task')
   const isSubmitDisabled = !task
-
 
   return (
     <HomeContainer>
@@ -156,17 +152,17 @@ useEffect(()=> {
           <span>{seconds[0]}</span>
           <span>{seconds[1]}</span>
         </CountdownContainer>
-        {
-          activeCycle ? (
+        {activeCycle ? (
           <StopCountdownBtn type="button" onClick={handleStopCycle}>
-          <HandPalm size={24} />
-          Stop
-        </StopCountdownBtn> ):(
-        <StartCountdownBtn disabled={isSubmitDisabled} type="submit">
-          <Play size={24} />
-          Start
-        </StartCountdownBtn>)
-        }
+            <HandPalm size={24} />
+            Stop
+          </StopCountdownBtn>
+        ) : (
+          <StartCountdownBtn disabled={isSubmitDisabled} type="submit">
+            <Play size={24} />
+            Start
+          </StartCountdownBtn>
+        )}
       </form>
     </HomeContainer>
   )
