@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Play } from 'phosphor-react'
+import { HandPalm, Play } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as zod from 'zod'
@@ -10,7 +10,8 @@ import {
   HomeContainer,
   MinuteAmountInput,
   Separator,
-  StartCoundownBtn,
+  StartCountdownBtn,
+  StopCountdownBtn,
   TaskInput,
 } from './styles'
 import { useEffect, useState } from 'react'
@@ -36,6 +37,7 @@ interface CycleProps {
   task: string
   minutesAmout: number
   startDate: Date
+  interruptedDate?: Date
 
 }
 
@@ -67,6 +69,20 @@ export function Home() {
 
     reset()
   }
+
+  function handleStopCycle(){
+    setCycles(cycles.map(cycle => {
+      if(cycle.id === activeCycleId) {
+        return {...cycle, interruptedDate: new Date() }
+        
+      } else {
+        return cycle
+      }
+    }))
+    setActiveCycleId(null)
+  }
+
+  console.log(cycles)
 
   const activeCycle = cycles.find(cycle => cycle.id === activeCycleId)
     useEffect(()=> {
@@ -110,6 +126,7 @@ useEffect(()=> {
             id="task"
             list="task-suggestion"
             placeholder="Give a name to your task"
+            disabled={!!activeCycle}
             {...register('task')}
           />
           <datalist id="task-suggestion">
@@ -126,6 +143,7 @@ useEffect(()=> {
             step={5}
             min={5}
             max={60}
+            disabled={!!activeCycle}
             {...register('minutesAmount', { valueAsNumber: true })}
           />
 
@@ -138,10 +156,17 @@ useEffect(()=> {
           <span>{seconds[0]}</span>
           <span>{seconds[1]}</span>
         </CountdownContainer>
-        <StartCoundownBtn disabled={isSubmitDisabled} type="submit">
+        {
+          activeCycle ? (
+          <StopCountdownBtn type="button" onClick={handleStopCycle}>
+          <HandPalm size={24} />
+          Stop
+        </StopCountdownBtn> ):(
+        <StartCountdownBtn disabled={isSubmitDisabled} type="submit">
           <Play size={24} />
           Start
-        </StartCoundownBtn>
+        </StartCountdownBtn>)
+        }
       </form>
     </HomeContainer>
   )
