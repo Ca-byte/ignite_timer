@@ -1,4 +1,4 @@
-import { CycleProps } from './reducer'
+import { CycleProps, CyclesState } from './reducer'
 
 export enum ActionTypes {
   ADD_NEW_CYCLE = 'ADD_NEW_CYCLE',
@@ -15,20 +15,14 @@ export function addNewCycleAction(newCycle: CycleProps) {
   }
 }
 
-export function markedAsFinishedCycleAction(activeCycleId: CycleProps) {
+export function markedAsFinishedCycleAction() {
   return {
     type: ActionTypes.MARK_CURRENT_CYCLE_AS_FINISHED,
-    payload: {
-      activeCycleId,
-    },
   }
 }
 
-export function stopCycleAction(activeCycleId: CycleProps) {
+export function stopCycleAction() {
   return {
     type: ActionTypes.INTERRUPT_CURRENT_CYCLE,
-    payload: {
-      activeCycleId,
-    },
   }
 }

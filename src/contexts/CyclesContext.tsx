@@ -10,7 +10,7 @@ interface CreateCycleData {
   task: string
   minutesAmount: number
 }
-interface CyclesContextType {
+export interface CyclesContextType {
   cycles: CycleProps[]
   activeCycle: CycleProps | undefined
   activeCycleId: string | null
@@ -43,7 +43,7 @@ export function CyclesContextProvider({
   }
 
   function markCurrentCycleAsFinished() {
-    dispatch(markedAsFinishedCycleAction(activeCycle))
+    dispatch(markedAsFinishedCycleAction())
   }
 
   function createNewCycle(data: CreateCycleData) {
@@ -59,7 +59,7 @@ export function CyclesContextProvider({
   }
 
   function stopCycle() {
-    dispatch(stopCycleAction(activeCycleId))
+    dispatch(stopCycleAction())
   }
 
   return (
