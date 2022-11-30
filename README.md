@@ -75,7 +75,7 @@ This is a project developed during React bootcamp **[Ignite](https://github.com/
 
 ## 🔖 Layout ##
 
-- [Ignite](https://www.figma.com/file/myEkJKJPALMmzY637irtLr/Ignite-Timer-(Community)?node-id=313%3A964&t=jib2LxOeOVFazHTG-0)
+- [Ignite Timer](https://www.figma.com/file/myEkJKJPALMmzY637irtLr/Ignite-Timer-(Community)?node-id=313%3A964&t=jib2LxOeOVFazHTG-0)
 
 Remembering that you need to have a [Figma](http://figma.com/) account to access it.
 
