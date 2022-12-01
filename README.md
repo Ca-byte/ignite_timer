@@ -65,7 +65,7 @@ $ npm run dev
 
 ## 💻 Project
 
-We have created a stopwatch and a history of cycles so that the user can record all the activities carried out during the day, with their status as to whether they have been completed, interrupted or are currently taking place.
+We have created a stopwatch and a history of cycles so that the user can record all the activities carried out during the day, with their status as to whether they have been completed, interrupted or are currently taking place. We've used styled components, React Hook Form, Zod, React Router Dom, Context Api, hooks like useReducer, immutability with the tool Immer.
 
 This is a project developed during React bootcamp **[Ignite](https://github.com/Rocketseat)**, run by **[@Rocketseat](https://github.com/Rocketseat)**.
 
